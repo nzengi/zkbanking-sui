@@ -1,0 +1,51 @@
+{
+    "package_id": "0xbb37eb9c6cb4940bbd035ebaa56e540f4c58e1196a05e8bd8409d01627fdc134",
+    "module": "finality",
+    "functions": {
+      "create_transaction_entry": {
+        "description": "Transaction oluşturma (entry function)",
+        "parameters": [
+          "initiator: address",
+          "counterparties: vector<address>",
+          "merkle_root: vector<u8>",
+          "metadata: vector<u8>",
+          "component_hashes: vector<vector<u8>>",
+          "proof_data: vector<u8>",
+          "public_inputs: vector<vector<u8>>",
+          "circuit_id: String",
+          "ctx: &mut TxContext"
+        ]
+      },
+      "add_signature_entry": {
+        "description": "Transaction'a imza ekleme",
+        "parameters": [
+          "transaction: &mut NotarisedTx",
+          "signer: address",
+          "signature: vector<u8>",
+          "public_key: vector<u8>"
+        ]
+      },
+      "add_notary_signature_entry": {
+        "description": "Notary imzası ekleme",
+        "parameters": [
+          "_notary_cap: &NotaryCap",
+          "transaction: &mut NotarisedTx",
+          "notary: address",
+          "signature: vector<u8>",
+          "public_key: vector<u8>"
+        ]
+      },
+      "complete_transaction_entry": {
+        "description": "Transaction'ı tamamla",
+        "parameters": [
+          "transaction: &mut NotarisedTx"
+        ]
+      }
+    },
+    "objects": {
+      "notary_cap": "0xc418ef3135701de60bd5438b8ab524f3d5579ea3f86a9a131af4335115934b5f",
+      "upgrade_cap": "0x003f14297979e545db4309f3a36717da859601da47eddb2a5149ec075f295749"
+    },
+    "network": "testnet",
+    "transaction_digest": "EZ8Td684Sev2Hr5N6ArbPqk3R7TtaAALeRmiCa35dpH1"
+  }
