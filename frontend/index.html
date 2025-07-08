@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zkBank - Zero-Knowledge Banking on Sui</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="styles.css" rel="stylesheet" />
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 min-h-screen"
+  >
+    <!-- Navigation -->
+    <nav
+      class="bg-black bg-opacity-20 backdrop-blur-lg border-b border-white border-opacity-20"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center">
+            <i class="fas fa-shield-alt text-3xl text-blue-400 mr-3"></i>
+            <h1 class="text-2xl font-bold text-white">zkBank</h1>
+          </div>
+          <div class="flex items-center space-x-4">
+            <span class="text-green-400 text-sm">
+              <i class="fas fa-circle mr-2"></i>Testnet Connected
+            </span>
+            <button
+              id="connectWallet"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+            >
+              <i class="fas fa-wallet mr-2"></i>Connect Wallet
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Hero Section -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-6xl font-bold text-white mb-4">
+          Zero-Knowledge Banking
+        </h2>
+        <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+          Secure, private financial transactions with multi-party signatures and
+          notarization on Sui blockchain
+        </p>
+        <div class="flex justify-center space-x-4">
+          <button
+            id="createTransactionBtn"
+            class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition-all transform hover:scale-105"
+          >
+            <i class="fas fa-plus mr-2"></i>Create Transaction
+          </button>
+          <button
+            id="viewTransactionsBtn"
+            class="bg-white bg-opacity-10 hover:bg-opacity-20 text-white px-8 py-3 rounded-lg font-semibold transition-all"
+          >
+            <i class="fas fa-list mr-2"></i>View Transactions
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-exchange-alt text-3xl text-blue-400 mr-4"></i>
+            <div>
+              <h3 class="text-white font-semibold">Total Transactions</h3>
+              <p
+                id="totalTransactions"
+                class="text-2xl font-bold text-green-400"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-clock text-3xl text-yellow-400 mr-4"></i>
+            <div>
+              <h3 class="text-white font-semibold">Pending</h3>
+              <p
+                id="pendingTransactions"
+                class="text-2xl font-bold text-yellow-400"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-check-circle text-3xl text-green-400 mr-4"></i>
+            <div>
+              <h3 class="text-white font-semibold">Completed</h3>
+              <p
+                id="completedTransactions"
+                class="text-2xl font-bold text-green-400"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <div class="flex items-center">
+            <i class="fas fa-shield-alt text-3xl text-purple-400 mr-4"></i>
+            <div>
+              <h3 class="text-white font-semibold">Notarized</h3>
+              <p
+                id="notarizedTransactions"
+                class="text-2xl font-bold text-purple-400"
+              >
+                0
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Forms -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Create Transaction Form -->
+        <div
+          id="createTransactionForm"
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <h3 class="text-2xl font-bold text-white mb-6">
+            <i class="fas fa-plus-circle mr-2 text-blue-400"></i>Create
+            Transaction
+          </h3>
+          <form id="transactionForm" class="space-y-4">
+            <div>
+              <label class="block text-white text-sm font-medium mb-2"
+                >Initiator Address</label
+              >
+              <input
+                type="text"
+                id="initiator"
+                name="initiator"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="0x3f350562c0151db2394cb9813e987415bca1ef3826287502ce58382f6129f953"
+              />
+            </div>
+            <div>
+              <label class="block text-white text-sm font-medium mb-2"
+                >Counterparty Address</label
+              >
+              <input
+                type="text"
+                id="counterparty"
+                name="counterparty"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="0xf4304fc20db1db265d80c07c06ca955c9b22ec9dc305f34a65666d870cd1e615"
+              />
+            </div>
+            <div>
+              <label class="block text-white text-sm font-medium mb-2"
+                >Amount (MIST)</label
+              >
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="1000000000"
+              />
+            </div>
+            <div>
+              <label class="block text-white text-sm font-medium mb-2"
+                >Required Signatures</label
+              >
+              <input
+                type="number"
+                id="requiredSignatures"
+                name="requiredSignatures"
+                value="2"
+                min="1"
+                max="10"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                id="notaryRequired"
+                name="notaryRequired"
+                checked
+                class="w-4 h-4 text-blue-600 bg-white bg-opacity-10 border border-white border-opacity-20 rounded focus:ring-blue-400"
+              />
+              <label class="ml-2 text-white text-sm"
+                >Require Notary Signature</label
+              >
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg font-semibold transition-all"
+            >
+              <i class="fas fa-paper-plane mr-2"></i>Create Transaction
+            </button>
+          </form>
+        </div>
+
+        <!-- Transaction Actions -->
+        <div
+          id="transactionActions"
+          class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+        >
+          <h3 class="text-2xl font-bold text-white mb-6">
+            <i class="fas fa-cogs mr-2 text-green-400"></i>Transaction Actions
+          </h3>
+
+          <!-- Add Signature -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-white mb-3">Add Signature</h4>
+            <form id="signatureForm" class="space-y-3">
+              <input
+                type="text"
+                id="signatureTransactionId"
+                name="transactionId"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Transaction ID"
+              />
+              <input
+                type="text"
+                id="signer"
+                name="signer"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Signer Address"
+              />
+              <button
+                type="submit"
+                class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition-colors"
+              >
+                <i class="fas fa-signature mr-2"></i>Add Signature
+              </button>
+            </form>
+          </div>
+
+          <!-- Add Notary Signature -->
+          <div class="mb-6">
+            <h4 class="text-lg font-semibold text-white mb-3">
+              Add Notary Signature
+            </h4>
+            <form id="notaryForm" class="space-y-3">
+              <input
+                type="text"
+                id="notaryTransactionId"
+                name="transactionId"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Transaction ID"
+              />
+              <input
+                type="text"
+                id="notary"
+                name="notary"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Notary Address"
+              />
+              <button
+                type="submit"
+                class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-semibold transition-colors"
+              >
+                <i class="fas fa-stamp mr-2"></i>Add Notary Signature
+              </button>
+            </form>
+          </div>
+
+          <!-- Complete Transaction -->
+          <div>
+            <h4 class="text-lg font-semibold text-white mb-3">
+              Complete Transaction
+            </h4>
+            <form id="completeForm" class="space-y-3">
+              <input
+                type="text"
+                id="completeTransactionId"
+                name="transactionId"
+                class="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg px-4 py-2 text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Transaction ID"
+              />
+              <button
+                type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold transition-colors"
+              >
+                <i class="fas fa-check-double mr-2"></i>Complete Transaction
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions List -->
+      <div
+        id="transactionsList"
+        class="mt-12 bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 border border-white border-opacity-20"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-2xl font-bold text-white">
+            <i class="fas fa-list mr-2 text-blue-400"></i>Recent Transactions
+          </h3>
+          <button
+            id="refreshTransactions"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            <i class="fas fa-sync-alt mr-2"></i>Refresh
+          </button>
+        </div>
+        <div id="transactionsContainer" class="space-y-4">
+          <!-- Transactions will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div class="bg-white rounded-lg p-6 flex items-center space-x-4">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"
+        ></div>
+        <span class="text-gray-700">Processing...</span>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div
+      id="notification"
+      class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 z-50"
+    >
+      <div class="flex items-center">
+        <i
+          id="notificationIcon"
+          class="fas fa-info-circle mr-3 text-blue-500"
+        ></i>
+        <span id="notificationMessage" class="text-gray-700"></span>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
